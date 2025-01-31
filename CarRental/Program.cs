@@ -40,19 +40,7 @@ internal class Program
                 }
             }
         }
-        static void AdatbazisLetrehozasEsImportalas()
-        {
-            MysqlHelper.DataBaseConnect();
-            MysqlHelper.CreateTable("autokolcsonzo");
-            List<Auto> autok = FajlBeolvasas.BeolvasCSV("autokolcsonzo_adatok.csv");
-            foreach (var auto in autok)
-            {
-                MysqlHelper.TableInsert("autokolcsonzo", auto.GetInsertValues());
-            }
-            Console.WriteLine("CSV fájl adatai betöltve.");
-        }
-
-        
+       
 }
 
    
