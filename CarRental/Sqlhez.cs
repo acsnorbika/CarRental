@@ -56,8 +56,26 @@ namespace CarRental
                 Console.WriteLine($"Hiba: {error.Message}");
             }
         }
+        public static string LegnepszerubbAuto()
+        {
+            string query = "SELECT Marka, Tipus, COUNT(*) as Count FROM autokolcsonzo GROUP BY Marka, Tipus ORDER BY Count DESC LIMIT 1";
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+                return reader.Read() ? $"{reader["Marka"]} {reader["Tipus"]}" : "Nincs adat";
+            }
+        }
 
-       
+        public static string LegdragabbAuto()
+        {
+            string query = "SELECT Marka, Tipus, Ar FROM autokolcsonzo ORDER BY Ar DESC LIMIT 1";
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+                return reader.Read() ? $"{reader["Marka"]} {reader["Tipus"]} - {reader["Ar"]} Ft/nap" : "Nincs adat";
+            }
+        }
+
 
     }
 }
