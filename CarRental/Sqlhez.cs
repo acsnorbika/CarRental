@@ -26,13 +26,26 @@ namespace CarRental
         }
         public static void CreateTable(string tableName)
         {
-            string tableFormat = $"CREATE TABLE `{tableName}` (`Nev` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL, `Marka` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL, `Tipus` varchar(50) NOT NULL, `Evjarat` int(11) NOT NULL, `Ar` DECIMAL(10,2) NOT NULL)";
+            string checkTableQuery = $"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'CarRental' AND table_name = '{tableName}'";
+            string createTableQuery = $"CREATE TABLE `{tableName}` (`Nev` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL, `Marka` varchar(50) CHARACTER SET utf8 COLLATE utf8_hungarian_ci NOT NULL, `Tipus` varchar(50) NOT NULL, `Evjarat` int(11) NOT NULL, `Ar` DECIMAL(10,2) NOT NULL)";
+
             try
             {
-                using (MySqlCommand command = new MySqlCommand(tableFormat, connection))
+                using (MySqlCommand checkCommand = new MySqlCommand(checkTableQuery, connection))
                 {
-                    command.ExecuteNonQuery();
-                    Console.WriteLine("Letrehoztad a tablat");
+                    int tableCount = Convert.ToInt32(checkCommand.ExecuteScalar());
+                    if (tableCount == 0) 
+                    {
+                        using (MySqlCommand createCommand = new MySqlCommand(createTableQuery, connection))
+                        {
+                            createCommand.ExecuteNonQuery();
+                            Console.WriteLine($"A '{tableName}' tábla létrehozva.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"A '{tableName}' tábla már létezik.");
+                    }
                 }
             }
             catch (Exception error)
@@ -45,11 +58,11 @@ namespace CarRental
         {
             try
             {
-                using (MySqlCommand command = new MySqlCommand($"INSERT INTO {tableName} VALUES ({values})", connection))
+                using (MySqlCommand command = new MySqlCommand($"INSERT INTO {tableName} (Marka, Tipus, Evjarat, Ar) VALUES ({values})", connection))
                 {
                     command.ExecuteNonQuery();
                 }
-                Console.WriteLine("kesz!");
+                Console.WriteLine("Autó sikeresen hozzáadva!");
             }
             catch (Exception error)
             {
@@ -76,6 +89,13 @@ namespace CarRental
             }
         }
 
-
+        public static void CloseConnection()
+        {
+            if (connection.State == System.Data.ConnectionState.Open)
+            {
+                connection.Close();
+                Console.WriteLine("Adatbázis kapcsolat lezárva.");
+            }
+        }
     }
 }

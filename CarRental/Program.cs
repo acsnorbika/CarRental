@@ -54,18 +54,29 @@ internal class Program
 
     static void UjAutoHozzaadas()
     {
-        Console.Write("Márka: ");
-        string marka = Console.ReadLine();
-        Console.Write("Típus: ");
-        string tipus = Console.ReadLine();
-        Console.Write("Évjárat: ");
-        int evjarat = int.Parse(Console.ReadLine());
-        Console.Write("Napi ár (Ft): ");
-        decimal ar = decimal.Parse(Console.ReadLine());
+        try
+        {
+            Console.Write("Márka: ");
+            string marka = Console.ReadLine();
+            Console.Write("Típus: ");
+            string tipus = Console.ReadLine();
+            Console.Write("Évjárat: ");
+            int evjarat = int.Parse(Console.ReadLine());
+            Console.Write("Napi ár (Ft): ");
+            decimal ar = decimal.Parse(Console.ReadLine());
 
-        Auto ujAuto = new Auto(marka, tipus, evjarat, ar);
-        MysqlHelper.TableInsert("autokolcsonzo", ujAuto.GetInsertValues());
-        Console.WriteLine("Autó sikeresen hozzáadva!");
+            Auto ujAuto = new Auto(marka, tipus, evjarat, ar);
+            MysqlHelper.TableInsert("autokolcsonzo", ujAuto.GetInsertValues());
+            Console.WriteLine("Autó sikeresen hozzáadva!");
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Hibás adatbevitel! Az évjáratnak és az árnak számnak kell lennie.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Hiba: {ex.Message}");
+        }
     }
 
     static void LegnepszerubbAutoLekerdezes()

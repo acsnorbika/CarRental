@@ -13,7 +13,7 @@ namespace CarRental
         public int Evjarat { get; private set; }
         public decimal Ar { get; private set; }
 
-        public Auto(string marka, string tipus, int evjarat, decimal ar)
+        public Auto (string marka, string tipus, int evjarat, decimal ar)
         {
             Marka = marka;
             Tipus = tipus;
