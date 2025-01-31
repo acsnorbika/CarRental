@@ -40,7 +40,43 @@ internal class Program
                 }
             }
         }
-       
+    static void AdatbazisLetrehozasEsImportalas()
+    {
+        MysqlHelper.DataBaseConnect();
+        MysqlHelper.CreateTable("autokolcsonzo");
+        List<Auto> autok = FajlBeolvasas.BeolvasCSV("autokolcsonzo_adatok.csv");
+        foreach (var auto in autok)
+        {
+            MysqlHelper.TableInsert("autokolcsonzo", auto.GetInsertValues());
+        }
+        Console.WriteLine("CSV fájl adatai betöltve.");
+    }
+
+    static void UjAutoHozzaadas()
+    {
+        Console.Write("Márka: ");
+        string marka = Console.ReadLine();
+        Console.Write("Típus: ");
+        string tipus = Console.ReadLine();
+        Console.Write("Évjárat: ");
+        int evjarat = int.Parse(Console.ReadLine());
+        Console.Write("Napi ár (Ft): ");
+        decimal ar = decimal.Parse(Console.ReadLine());
+
+        Auto ujAuto = new Auto(marka, tipus, evjarat, ar);
+        MysqlHelper.TableInsert("autokolcsonzo", ujAuto.GetInsertValues());
+        Console.WriteLine("Autó sikeresen hozzáadva!");
+    }
+
+    static void LegnepszerubbAutoLekerdezes()
+    {
+        Console.WriteLine("Legnépszerűbb autó: " + MysqlHelper.LegnepszerubbAuto());
+    }
+
+    static void LegdragabbAutoLekerdezes()
+    {
+        Console.WriteLine("Legdrágább autó: " + MysqlHelper.LegdragabbAuto());
+    }
 }
 
    
